@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head th:replace="~{fragments/header :: header}">
+</head>
+<body>
+<div class="about-content">
+    <div class="w1000">
+        <div class="item info">
+            <div class="title">
+                <h3>小不点</h3>
+            </div>
+            <div class="cont">
+                <img src="img/xc_img1.jpg">
+                <div class="per-info">
+                    <p>
+                        <span class="name"></span><br/>
+                        <span class="age"></span><br/>
+                        <span class="Career"></span><br/>
+                        <span class="interest"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="item tool">
+            <div class="title">
+                <h3>选样</h3>
+            </div>
+            <div class="layui-fluid">
+                <div class="layui-row">
+                    <form id="exportForm" action="/exportExcelTemplate" method="post" enctype="multipart/form-data">
+                        选样文件：<input type="file" id="importFile" name="file" required/> <br/>
+                        大额伐值：<input type="text" id="largeCuttingValue" name="largeCuttingValue" required/> <br/>
+                        选样初值:<input type="text" name="fromNumber" placeholder="此处填写从第几条数据开始选样" style="width: 200px" required/> <br/>
+                        选样数：<input type="text" name="sampleNumber" required/> <br/>
+                        <input type="button" id="checkNoLarge" value="查看非大额数据有多少条">
+                        <input type="submit" id="importData" value="进行选样">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script type="text/javascript">
+    layui.config({
+        base: 'js/util/'
+    }).use(['element', 'laypage', 'form', 'layer', 'menu'], function () {
+        element = layui.element, laypage = layui.laypage, form = layui.form, layer = layui.layer, menu = layui.menu;
+        menu.init();
+    });
+    $(function () {
+        //进行选样
+        $('#checkNoLarge').click(function () {
+            var importFile = $('#importFile').val();
+            var largeCuttingValue = $('#largeCuttingValue').val();
+            if (importFile == '') {
+                alert('请选中要导入的文件！');
+                return false;
+            }
+            if (largeCuttingValue == ""){
+                alert('大额伐值不能为空！');
+                return false;
+            }
+            $('#exportForm').attr("action", "/checkNoLarge").ajaxSubmit({
+                success: function (data) {
+                    alert(data.message);
+                },
+                error: function () {
+                    alert("文件导入失败！");
+                }
+            });
+            $('#exportForm').attr("action", "/exportExcelTemplate");
+        });
+    });
+</script>
+</body>
+</html>
