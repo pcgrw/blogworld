@@ -15,3 +15,7 @@ spring:
 #    hibernate:
 #      ddl-auto: none #应用启动时自动创建删除数据库
 #    database-platform: org.hibernate.dialect.MySQL55Dialect
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
