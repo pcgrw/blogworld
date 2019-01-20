@@ -4,7 +4,9 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -61,6 +63,9 @@ public class ExcelServiceImpl implements ExcelService {
             if (j < (sampleNumber - 1)) {
                 sampleNumberStringBuilder.append(",");
             }
+        }
+        if (workbook instanceof XSSFWorkbook) {
+            workbook = new SXSSFWorkbook((XSSFWorkbook) workbook, 10000);//内存中保留 10000 条数据，以免内存溢出，其余写入 硬盘
         }
         Sheet totalSheet = workbook.createSheet("全量数据");
         List<Map<String, Object>> totalDatas = new ArrayList<>();//全量数据
