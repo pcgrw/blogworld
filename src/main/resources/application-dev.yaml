@@ -1,0 +1,20 @@
+server:
+  port: 8080 # 应用服务 WEB 访问端口
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver # 数据库驱动：
+    name: defaultDataSource # 数据源名称
+    url: jdbc:mysql://192.168.255.133:3306/blog_world?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8 # 数据库连接地址
+    # 数据库用户名&密码：
+    username: panchao
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+logging:
+  level:
+    root: info
+    com.panchao.blog: debug
+  file:
+    path: ./log
