@@ -10,6 +10,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @ClassName IndexController
@@ -33,5 +34,11 @@ public class IndexController {
         model.addAttribute("tags", tagService.top(5));
         model.addAttribute("recommendPosts", postService.recommendTop(5));
         return "index";
+    }
+
+    @GetMapping("/posts/{id}")
+    public String post(@PathVariable Long id, Model model){
+        model.addAttribute("post",postService.getAndConvert(id));
+        return "post";
     }
 }

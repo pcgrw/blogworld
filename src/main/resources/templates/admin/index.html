@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/_fragments :: head(~{::title})">
+    <title>博客管理</title>
+</head>
+<body>
+<!-- 导航 -->
+<!-- inverted 反转 --><!-- attached 依附 --><!--segment  -->
+<nav th:replace="admin/_fragments :: menu(0)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+</nav>
+
+<div class="m-container-small m-padded-tb-big">
+    <div class="ui container">
+        <div class="ui success large message">
+            <h3>Hi,</h3>
+            <p>XXX，欢迎登陆</p>
+        </div>
+        <img src="../../static/images/moroccan-flower.png" th:src="@{/images/wechat.jpg}" class="ui rounded bordered fluid image">
+    </div>
+</div>
+
+<!-- 底部 -->
+<footer th:replace="admin/_fragments :: footer"></footer>
+
+<th:block th:replace="admin/_fragments :: script">
+</th:block>
+
+<script type="text/javascript">
+    /*editormd*/
+    var testEditor;
+    $(function () {
+        testEditor = editormd({
+            id: "md-content",
+            width: "100%",
+            height: 640,
+            path: "../../static/lib/editormd/lib/"
+        });
+    });
+    /*toggleClass*/
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-moble-hide');
+    });
+    $('.ui .dropdown').dropdown({
+        on: 'hover'
+    });
+    $('.ui.form').form({
+        fields: {
+            title: {
+                identifier: 'title',
+                rules: [{
+                    type: 'empty',
+                    prompt: '标题：请输入博客标题'
+                }]
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

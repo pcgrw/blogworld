@@ -34,7 +34,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public String create(@RequestBody @Valid CategoryParam categoryParam, BindingResult result,
+    public String create(@Valid CategoryParam categoryParam, BindingResult result,
                          RedirectAttributes attributes) {
         Category category = new Category();
         BeanUtils.updateProperties(categoryParam, category);
@@ -91,6 +91,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseBody
     public String delete(@PathVariable Long id, RedirectAttributes attributes) {
         categoryService.delete(id);
         attributes.addFlashAttribute("message", "删除成功");

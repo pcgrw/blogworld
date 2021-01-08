@@ -8,7 +8,7 @@ import java.util.List;
  * Comment Service
  */
 public interface CommentService {
-    Comment save(Comment comment);
+    Comment saveComment(Comment comment);
 
     List<Comment> listByPostId(Long postId);
 }

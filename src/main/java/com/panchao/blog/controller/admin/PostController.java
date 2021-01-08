@@ -68,12 +68,13 @@ public class PostController {
         model.addAttribute("categories", categoryService.listAll());
         model.addAttribute("tags", tagService.listAll());
         Post post = postService.get(id);
+        post.init();
         model.addAttribute("post", post);
         return "admin/post-input";
     }
 
     @PostMapping
-    public String create(@RequestBody @Valid PostParam postParam, RedirectAttributes attributes,
+    public String create(@Valid PostParam postParam, RedirectAttributes attributes,
                          HttpSession session) {
         Post post = new Post();
         BeanUtils.updateProperties(postParam, post);

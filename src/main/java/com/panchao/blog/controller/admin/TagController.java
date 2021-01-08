@@ -42,7 +42,7 @@ public class TagController {
     }
 
     @PostMapping
-    public String create(@RequestBody @Valid TagParam tagParam, BindingResult result,
+    public String create(@Valid TagParam tagParam, BindingResult result,
                          RedirectAttributes attributes) {
         Tag tag = new Tag();
         BeanUtils.updateProperties(tagParam, tag);

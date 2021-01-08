@@ -46,15 +46,39 @@ public class Post {
     @Lob
     private String content;
     /*
+     * 赞赏开启
+     */
+    @Column(name = "is_appreciation")
+    private boolean appreciation;
+    /*
+     * 版权开启
+     */
+    @Column(name = "is_share_statement")
+    private boolean shareStatement;
+    /*
+     * 评论开启
+     */
+    @Column(name = "is_open_comment")
+    private boolean openComment;
+    /*
      * 是否发布
      */
     @Column(name = "is_published")
     private boolean published;
     /*
+     * 是否推荐
+     */
+    @Column(name = "is_recommend")
+    private boolean recommend;
+    /*
      * 首图
      */
     @Column(name = "first_picture")
     private String firstPicture;
+    /*
+     * 标记
+     */
+    private String flag;
     /*
      * 浏览次数
      */
@@ -92,6 +116,9 @@ public class Post {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
 
+    @Transient
+    private String tagIds;
+
     @PrePersist
     protected void prePersist() {
         Date now = DateUtils.now();
@@ -112,5 +139,27 @@ public class Post {
     @PreRemove
     protected void preRemove() {
         updateTime = DateUtils.now();
+    }
+
+    public void init() {
+        this.tagIds = tagsToIds(this.getTags());
+    }
+
+    private String tagsToIds(List<Tag> tags) {
+        if (!tags.isEmpty()) {
+            StringBuffer ids = new StringBuffer();
+            boolean flag = false;
+            for (Tag tag : tags) {
+                if (flag) {
+                    ids.append(",");
+                } else {
+                    flag = true;
+                }
+                ids.append(tag.getId());
+            }
+            return ids.toString();
+        } else {
+            return tagIds;
+        }
     }
 }

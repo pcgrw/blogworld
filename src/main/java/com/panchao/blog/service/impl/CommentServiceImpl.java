@@ -22,7 +22,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public Comment save(Comment comment) {
+    public Comment saveComment(Comment comment) {
+        Long parentCommentId = comment.getParentComment().getId();
+        if (parentCommentId != -1){
+            comment.setParentComment(commentRepository.getOne(parentCommentId));
+        }else {
+            comment.setParentComment(null);
+        }
         return commentRepository.save(comment);
     }
 

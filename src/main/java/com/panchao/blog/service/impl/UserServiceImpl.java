@@ -3,6 +3,7 @@ package com.panchao.blog.service.impl;
 import com.panchao.blog.model.entity.User;
 import com.panchao.blog.repository.UserRepository;
 import com.panchao.blog.service.UserService;
+import com.panchao.blog.util.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User checkUser(String username, String password) {
-        Optional<User> optional = userRepository.findByUsernameAndAndPassword(username, password);
+        Optional<User> optional = userRepository.findByUsernameAndAndPassword(username, MD5Utils.code(password));
         return optional.orElse(null);
     }
 }
