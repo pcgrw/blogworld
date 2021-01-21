@@ -10,6 +10,10 @@ import javax.validation.constraints.Size;
  */
 @Data
 public class CategoryParam {
+    /**
+     * 分类Id
+     */
+    private Long id;
     /*
      * 分类名称
      */

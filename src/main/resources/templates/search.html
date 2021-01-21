@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title})">
+    <title>搜索结果</title>
+</head>
+<body>
+<!-- 导航 -->
+<nav th:replace="_fragments :: menu(0)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+</nav>
+
+<!-- 中间内容 -->
+<div class="m-container m-padded-tb-large">
+    <div class="ui container">
+        <!-- 头部开始 -->
+        <div class="ui top attached segment">
+            <!-- middle aligned垂直居中 -->
+            <div class="ui middle aligned two column grid">
+                <div class="column">
+                    <div class="ui teal header">搜索结果</div>
+                </div>
+                <div class="right aligned column">
+                    共<h2 class="ui orange header m-inline-block m-text-thin" th:text="${page.totalElements}"> 14 </h2>个
+                </div>
+            </div>
+        </div>
+        <!-- 头部结束 -->
+        <div class="ui top attached teal segment">
+            <!--循环开始  -->
+            <div class="ui padded vertical segment m-padded-tb-large" th:each="post : ${page.content}">
+                <div class="ui middle aligned mobile reversed stackable grid">
+                    <div class="eleven wide column">
+                        <h3 class="ui header"><a href="#" th:href="@{/posts/{id}(id=${post.id})}" target="_blank" class="m-black" th:text="${post.title}">你真的理解什么是地摊经济吗？</a></h3>
+                        <p class="m-text" th:text="|${post.excerpt}......|">段落内容</p>
+                        <div class="ui grid">
+                            <div class="eleven wide column">
+                                <div class="ui mini horizontal link list">
+                                    <div class="item">
+                                        <img alt="" src="../static/images/moroccan-flower.png" class="ui avatar image" th:src="@{${post.user.avatar}}">
+                                        <div class="content">
+                                            <a href="#" class="header" th:text="${post.user.nickname}">姓名</a>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <i class="calender icon"></i><span th:text="${#dates.format(post.updateTime,'yyyy-MM-dd HH:mm')}">2020-06-17</span>
+                                    </div>
+                                    <div class="item">
+                                        <i class="eye icon"></i><span th:text="${post.views}">浏览次数</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right aligned five wide column">
+                                <a href="#" th:href="@{/categories/{id}(id=${post.category.id})}" target="_blank"
+                                   class="ui teal basic label m-padded-tiny m-text-thin" th:text="${post.category.categoryName}">标签</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="five wide column">
+                        <a href="#" th:href="@{/posts/{id}(id=${post.id})}" target="_blank">
+                            <img alt="" src="../static/images/moroccan-flower.png" th:src="@{${post.firstPicture}}" class="ui rounded image">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--循环结束  -->
+        </div>
+        <!-- 底部开始 -->
+        <div class="ui bottom attached segment" th:if="${page.totalPages}>1">
+            <div class="ui middle aligned two column grid">
+                <div class="column">
+                    <a href="#" onclick="page(this)" th:attr="data-page=${page.number}-1" th:unless="${page.first}" class="ui teal mini basic button">上一页</a>
+                </div>
+                <div class="right aligned column">
+                    <a href="#" onclick="page(this)" th:attr="data-page=${page.number}+1" th:unless="${page.last}" class="ui teal mini basic button">下一页</a>
+                </div>
+            </div>
+        </div>
+        <!-- 底部结束 -->
+    </div>
+</div>
+
+<!-- 底部footer -->
+<footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
+</footer>
+
+<th:block th:replace="_fragments :: script">
+</th:block>
+
+<script type="text/javascript">
+    /*toggleClass*/
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-moble-hide');
+    });
+
+    function page(obj) {
+        debugger;
+        $("[name='page']").val($(obj).data("page"));
+        $('#search-form').submit();
+    }
+</script>
+</body>
+</html>

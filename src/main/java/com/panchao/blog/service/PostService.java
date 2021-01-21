@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Post Service
@@ -15,6 +16,8 @@ public interface PostService {
     Page<Post> page(PostQuery postQuery, Pageable pageable);
 
     Page<Post> page(Pageable pageable);
+
+    Page<Post> pageByTagId(Long tagId, Pageable pageable);
 
     List<Post> recommendTop(Integer size);
 
@@ -27,4 +30,10 @@ public interface PostService {
     Post getAndConvert(Long id);
 
     void delete(Long id);
+
+    long countPost();
+
+    Map<String, List<Post>> archivePost();
+
+    Page<Post> page(Pageable pageable, String query);
 }

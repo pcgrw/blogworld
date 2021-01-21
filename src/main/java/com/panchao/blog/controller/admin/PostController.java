@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Post Controller
  */
-@Controller
+@Controller("adminPostController")
 @RequestMapping("/admin/posts")
 public class PostController {
     @Autowired
@@ -46,7 +46,7 @@ public class PostController {
         return "/admin/posts";
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public String search(
         @PageableDefault(size = 10, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
         PostQuery postQuery,
@@ -91,7 +91,7 @@ public class PostController {
         return "redirect:/admin/posts";
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/{id}")
     public String update(@PathVariable Long id, @RequestBody @Valid PostParam postParam, RedirectAttributes attributes,
                          HttpSession session) {
         Post post = new Post();
@@ -109,7 +109,7 @@ public class PostController {
         return "redirect:/admin/posts";
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes attributes) {
         postService.delete(id);
         attributes.addFlashAttribute("message", "删除成功");

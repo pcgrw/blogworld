@@ -1,5 +1,11 @@
+/*解决移动端左右浮动问题*/
+html,body{
+    overflow-x: hidden;
+}
+
 body{
-    background: url("../images/bg.jpg") !important;
+    /*background: url("../images/background/bg.png") !important;*/
+    background: #f5f6f7 !important;
 }
 
 .m-padded-mini {

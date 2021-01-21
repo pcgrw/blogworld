@@ -11,8 +11,8 @@
 <div class="ui attached pointing menu">
     <div class="ui container">
         <div class="right menu">
-            <a href="#" class="item">新增</a>
-            <a href="#" class="active teal item">列表</a>
+            <a href="#" th:href="@{/admin/tags/input}" class="item">新增</a>
+            <a href="#" th:href="@{/admin/tags}" class="active teal item">列表</a>
         </div>
     </div>
 </div>
@@ -20,62 +20,43 @@
 <!-- 中间内容 -->
 <div class="m-container-small m-padded-tb-big">
     <div class="ui container">
-        <!--<form action="#" class="ui segment form">
-            <div class="inline fields">
-                <div class="field">
-                    <input type="text" name="title" placeholder="标题">
-                </div>
-                <div class="field">
-                    <div class="ui selection dropdown">
-                        <input type="hidden" name="type">
-                        <i class="dropdown icon"></i>
-                        <div class="default text">分类</div>
-                        <div class="menu">
-                            <div class="item" data-value="1">错误日志</div>
-                            <div class="item" data-value="2">Java学习</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="ui checkbox">
-                        <input type="checkbox" id="recommend" name="recommend">
-                        <label for="recommend">推荐</label>
-                    </div>
-                </div>
-                <div class="field">
-                    <button class="ui mini teal basic button"><i class="search icon"></i>搜索</button>
-                </div>
-            </div>
-        </form>-->
+        <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+            <i class="close icon"></i>
+            <div class="" th:text="|提示： ${message}">提示：操作成功！</div>
+        </div>
 
         <table class="ui celled table">
             <thead>
-                <tr>
-                    <th></th>
-                    <th>名称</th>
-                    <th>操作</th>
-                </tr>
+            <tr>
+                <th></th>
+                <th>名称</th>
+                <th>操作</th>
+            </tr>
             </thead>
             <tbody>
-                <tr th:each="tag,iterStat : ${page.content}">
-                    <td th:text="${iterStat.count}">序号</td>
-                    <td th:text="${tag.tagName}">名称</td>
-                    <td>
-                        <a href="#" class="ui mini teal basic button">编辑</a>
-                        <a href="#" th:onclick="'javascript:deleteTag(\''+${tag.id}+'\')'" class="ui mini red basic button">删除</a>
-                    </td>
-                </tr>
+            <tr th:each="tag,iterStat : ${page.content}">
+                <td th:text="${iterStat.count}">序号</td>
+                <td th:text="${tag.tagName}">名称</td>
+                <td>
+                    <a href="#" th:href="@{/admin/tags/{id}/input(id = ${tag.id})}"
+                       class="ui mini teal basic button">编辑</a>
+                    <a href="#" th:href="@{/admin/tags/{id}/delete(id = ${tag.id})}"
+                       onclick="return confirm('确定要删除该标签吗？')" class="ui mini red basic button">删除</a>
+                </td>
+            </tr>
             </tbody>
             <tfoot>
-                <tr>
-                    <th colspan="6">
-                        <div class="ui mini pagination menu">
-                            <a class="item">上一页</a>
-                            <a class="item">下一页</a>
-                        </div>
-                        <a href="#" th:href="@{/admin/tags/input}" class="ui mini right floated teal basic button">新增</a>
-                    </th>
-                </tr>
+            <tr>
+                <th colspan="6">
+                    <div class="ui mini pagination menu" th:if="${page.totalPages}>1">
+                        <a class="item" th:href="@{/admin/tags(page=${page.number}-1)}"
+                           th:unless="${page.first}">上一页</a>
+                        <a class="item" th:href="@{/admin/tags(page=${page.number}+1)}"
+                           th:unless="${page.last}">下一页</a>
+                    </div>
+                    <a href="#" th:href="@{/admin/tags/input}" class="ui mini right floated teal basic button">新增</a>
+                </th>
+            </tr>
             </tfoot>
         </table>
     </div>
@@ -97,19 +78,24 @@
         on: 'hover'
     });
 
-    function deleteTag(id){
+    function deleteTag(id) {
         $.ajax({
-            url:"/admin/tags/"+ id,
-            type:"DELETE",
-            success:function(data){
+            url: "/admin/tags/" + id,
+            type: "DELETE",
+            success: function (data) {
                 alert("成功");
                 window.location.href = "/admin/tags";
             },
-            error:function(jqXHR){
+            error: function (jqXHR) {
                 alert("失败");
             }
         });
     }
+
+    //消息提示关闭初始化
+    $('.message .close').on('click', function () {
+        $(this).closest('.message').transition('fade');
+    });
 </script>
 </body>
 </html>

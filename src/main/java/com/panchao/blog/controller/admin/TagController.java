@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * Tag Controller
  */
-@Controller
+@Controller("adminTagController")
 @RequestMapping("/admin/tags")
 public class TagController {
     @Autowired
@@ -37,7 +37,7 @@ public class TagController {
 
     @GetMapping("/input")
     public String input(Model model) {
-        model.addAttribute("tag", new Tag());
+        model.addAttribute("tagParam", new TagParam());
         return "admin/tag-input";
     }
 
@@ -65,12 +65,14 @@ public class TagController {
     @GetMapping("/{id}/input")
     public String input(@PathVariable Long id, Model model) {
         Tag tag = tagService.get(id);
-        model.addAttribute("tag", tag);
+        TagParam tagParam = new TagParam();
+        BeanUtils.updateProperties(tag, tagParam);
+        model.addAttribute("tagParam", tagParam);
         return "admin/tag-input";
     }
 
-    @PutMapping("/{id}")
-    public String update(@PathVariable Long id, @RequestBody @Valid TagParam tagParam, BindingResult result,
+    @PostMapping("/{id}")
+    public String update(@PathVariable Long id, @Valid TagParam tagParam, BindingResult result,
                          RedirectAttributes attributes) {
         Tag tag = new Tag();
         BeanUtils.updateProperties(tagParam, tag);
@@ -90,7 +92,7 @@ public class TagController {
         return "redirect:/admin/tags";
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes attributes) {
         tagService.delete(id);
         attributes.addFlashAttribute("message", "删除成功");

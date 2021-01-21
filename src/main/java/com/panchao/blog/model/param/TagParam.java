@@ -10,6 +10,10 @@ import javax.validation.constraints.Size;
  */
 @Data
 public class TagParam {
+    /**
+     * 标签Id
+     */
+    private Long id;
     /*
      * 标签名称
      */

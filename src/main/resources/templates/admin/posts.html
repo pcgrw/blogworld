@@ -11,8 +11,8 @@
 <div class="ui attached pointing menu">
     <div class="ui container">
         <div class="right menu">
-            <a href="#" class="item">发布</a>
-            <a href="#" class="active teal item">列表</a>
+            <a href="#" th:href="@{/admin/posts/input}" class="item">发布</a>
+            <a href="#" th:href="@{/admin/posts}" class="active teal item">列表</a>
         </div>
     </div>
 </div>
@@ -20,19 +20,26 @@
 <!-- 中间内容 -->
 <div class="m-container-small m-padded-tb-big">
     <div class="ui container">
+        <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+            <i class="close icon"></i>
+            <div class="" th:text="|提示： ${message}">提示：操作成功！</div>
+        </div>
+
         <form action="#" class="ui segment form">
+            <input type="hidden" name="page">
             <div class="inline fields">
                 <div class="field">
                     <input type="text" name="title" placeholder="标题">
                 </div>
                 <div class="field">
                     <div class="ui selection dropdown">
-                        <input type="hidden" name="type">
+                        <input type="hidden" name="categoryId">
                         <i class="dropdown icon"></i>
                         <div class="default text">分类</div>
                         <div class="menu">
-                            <div class="item" data-value="1">错误日志</div>
-                            <div class="item" data-value="2">Java学习</div>
+                            <div class="item" data-value="1" th:each="category : ${categories}"
+                                 th:data-value="${category.id}" th:text="${category.categoryName}">错误日志
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,13 +50,15 @@
                     </div>
                 </div>
                 <div class="field">
-                    <button class="ui mini teal basic button"><i class="search icon"></i>搜索</button>
+                    <button type="button" id="search-btn" class="ui mini teal basic button"><i class="search icon"></i>搜索
+                    </button>
                 </div>
             </div>
         </form>
 
-        <table class="ui celled table">
-            <thead>
+        <div id="table-container">
+            <table th:fragment="postList" class="ui celled table">
+                <thead>
                 <tr>
                     <th></th>
                     <th>标题</th>
@@ -58,8 +67,8 @@
                     <th>更新时间</th>
                     <th>操作</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 <tr th:each="post,iterStat : ${page.content}">
                     <td th:text="${iterStat.count}">1</td>
                     <td th:text="${post.title}">刻意练习清单</td>
@@ -67,23 +76,29 @@
                     <td th:text="${post.published} ? '发布' : '草稿'">发布</td>
                     <td th:utext="${post.updateTime}">yyyy-mm-dd ww:ss</td>
                     <td>
-                        <a href="#" th:href="@{/admin/posts/{id}/input(id=${post.id})}" class="ui mini teal basic button">编辑</a>
-                        <a href="#" class="ui mini red basic button">删除</a>
+                        <a href="#" th:href="@{/admin/posts/{id}/input(id=${post.id})}"
+                           class="ui mini teal basic button">编辑</a>
+                        <a href="#" th:href="@{/admin/posts/{id}/delete(id=${post.id})}"
+                           class="ui mini red basic button">删除</a>
                     </td>
                 </tr>
-            </tbody>
-            <tfoot>
+                </tbody>
+                <tfoot>
                 <tr>
                     <th colspan="6">
-                        <div class="ui mini pagination menu">
-                            <a class="item">上一页</a>
-                            <a class="item">下一页</a>
+                        <div class="ui mini pagination menu" th:if="${page.totalPages}>1">
+                            <a class="item" onclick="page(this)" th:attr="data-page=${page.number}-1"
+                               th:unless="${page.first}">上一页</a>
+                            <a class="item" onclick="page(this)" th:attr="data-page=${page.number}+1"
+                               th:unless="${page.last}">下一页</a>
                         </div>
-                        <a href="#" th:href="@{/admin/posts/input}" class="ui mini right floated teal basic button">新增</a>
+                        <a href="#" th:href="@{/admin/posts/input}"
+                           class="ui mini right floated teal basic button">新增</a>
                     </th>
                 </tr>
-            </tfoot>
-        </table>
+                </tfoot>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -101,6 +116,30 @@
 
     $('.ui.dropdown').dropdown({
         on: 'hover'
+    });
+
+    $("#search-btn").click(function () {
+        $("[name='page']").val(0);
+        loaddata();
+    });
+
+    function page(obj) {
+        $("[name='page']").val($(obj).data("page"));
+        loaddata();
+    }
+
+    function loaddata() {
+        $("#table-container").load("/admin/posts/search", {
+            title: $("[name='title']").val(),
+            categoryId: $("[name='categoryId']").val(),
+            recommend: $("[name='recommend']").prop('checked'),
+            page: $("[name='page']").val()
+        });
+    }
+
+    //消息提示关闭初始化
+    $('.message .close').on('click', function () {
+        $(this).closest('.message').transition('fade');
     });
 </script>
 </body>

@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * Login Controller
  */
-@Controller
+@Controller("adminLoginController")
 @RequestMapping("/admin")
 public class LoginController {
     @Autowired

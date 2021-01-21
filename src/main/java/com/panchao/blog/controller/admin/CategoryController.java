@@ -12,7 +12,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -21,7 +24,7 @@ import java.util.Objects;
 /**
  * Category Controller
  */
-@Controller
+@Controller("adminCategoryController")
 @RequestMapping("/admin/categories")
 public class CategoryController {
     @Autowired
@@ -29,7 +32,7 @@ public class CategoryController {
 
     @GetMapping("/input")
     public String input(Model model) {
-        model.addAttribute("category", new Category());
+        model.addAttribute("categoryParam", new CategoryParam());
         return "admin/category-input";
     }
 
@@ -65,12 +68,14 @@ public class CategoryController {
     @GetMapping("/{id}/input")
     public String input(@PathVariable Long id, Model model) {
         Category category = categoryService.get(id);
-        model.addAttribute("category", category);
+        CategoryParam categoryParam = new CategoryParam();
+        BeanUtils.updateProperties(category, categoryParam);
+        model.addAttribute("categoryParam", categoryParam);
         return "admin/category-input";
     }
 
-    @PutMapping("/{id}")
-    public String update(@PathVariable Long id, @RequestBody @Valid CategoryParam categoryParam, BindingResult result,
+    @PostMapping("/{id}")
+    public String update(@PathVariable Long id, @Valid CategoryParam categoryParam, BindingResult result,
                          RedirectAttributes attributes) {
         Category category = new Category();
         BeanUtils.updateProperties(categoryParam, category);
@@ -90,8 +95,7 @@ public class CategoryController {
         return "redirect:/admin/categories";
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseBody
+    @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes attributes) {
         categoryService.delete(id);
         attributes.addFlashAttribute("message", "删除成功");

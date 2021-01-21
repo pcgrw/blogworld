@@ -16,10 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Post Service Impl
@@ -37,6 +36,14 @@ public class PostServiceImpl implements PostService {
     @Override
     public Page<Post> page(Pageable pageable) {
         return postRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Post> pageByTagId(Long tagId, Pageable pageable) {
+        return postRepository.findAll((Specification<Post>) (root, criteriaQuery, criteriaBuilder) -> {
+            Join<Object, Object> join = root.join("tags");
+            return criteriaBuilder.equal(join.get("id"), tagId);
+        }, pageable);
     }
 
     @Override
@@ -80,6 +87,32 @@ public class PostServiceImpl implements PostService {
     @Override
     public void delete(Long id) {
         postRepository.deleteById(id);
+    }
+
+    @Override
+    public long countPost() {
+        return postRepository.count();
+    }
+
+    @Override
+    public Map<String, List<Post>> archivePost() {
+        List<Post> posts = postRepository.findAll();
+        Map<String, List<Post>> archiveMap = new HashMap<>();
+        List<Post> list;
+        Calendar calendar = Calendar.getInstance();
+        for (Post post : posts) {
+            calendar.setTime(post.getUpdateTime());
+            String year = String.valueOf(calendar.get(Calendar.YEAR));
+            list = Objects.isNull(archiveMap.get(year)) ? new ArrayList<>() : archiveMap.get(year);
+            list.add(post);
+            archiveMap.put(year, list);
+        }
+        return archiveMap;
+    }
+
+    @Override
+    public Page<Post> page(Pageable pageable, String query) {
+        return postRepository.findByQuery(query,pageable);
     }
 
     private Specification<Post> buildSpecByQuery(PostQuery postQuery) {

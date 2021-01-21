@@ -2,12 +2,14 @@ package com.panchao.blog.config;
 
 import com.panchao.blog.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Web Mvc Config
  */
+@Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public LoginInterceptor loginInterceptor() {

@@ -11,8 +11,8 @@
 <div class="ui attached pointing menu">
     <div class="ui container">
         <div class="right menu">
-            <a href="#" class="active teal item">新增</a>
-            <a href="#" class="item">列表</a>
+            <a href="#" th:href="@{/admin/categories/input}" class="active teal item">新增</a>
+            <a href="#" th:href="@{/admin/categories}" class="teal item">列表</a>
         </div>
     </div>
 </div>
@@ -20,7 +20,7 @@
 <!-- 中间内容 -->
 <div class="m-container-small m-padded-tb-big">
     <div class="ui container">
-        <form id="post-form" action="#" method="post" th:action="*{id}==0 ? @{/admin/categories} : @{/admin/categories/{id}(id=*{id})}" th:object="${category}" class="ui form">
+        <form id="post-form" action="#" method="post" th:action="*{id}==0 ? @{/admin/categories} : @{/admin/categories/{id}(id=*{id})}" th:object="${categoryParam}" class="ui form">
             <input type="hidden" id="id" name="id" th:value="*{id}">
             <div class="required field">
                 <div class="ui left labeled input">
@@ -37,6 +37,11 @@
                 </div>
             </div>
             <div class="ui error message"></div>
+            <div class="ui negative message" th:if="${#fields.hasErrors('*')}">
+                <ul>
+                    <li th:each="err:${#fields.errors('*')}" th:text="${err}">输入有误</li>
+                </ul>
+            </div>
 
             <div class="ui right aligned container">
                 <button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
@@ -75,7 +80,7 @@
 
     $('.ui.form').form({
         fields: {
-            title: {
+            categoryName: {
                 identifier: 'categoryName',
                 rules: [{
                     type: 'empty',
