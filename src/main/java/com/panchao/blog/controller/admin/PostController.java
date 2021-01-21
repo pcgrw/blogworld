@@ -43,7 +43,7 @@ public class PostController {
         List<Category> categories = categoryService.listAll();
         model.addAttribute("categories", categories);
         model.addAttribute("page", postService.page(postQuery, pageable));
-        return "/admin/posts";
+        return "admin/posts";
     }
 
     @PostMapping("/search")
@@ -52,7 +52,7 @@ public class PostController {
         PostQuery postQuery,
         Model model) {
         model.addAttribute("page", postService.page(postQuery, pageable));
-        return "/admin/posts :: postList";
+        return "admin/posts :: postList";
     }
 
     @GetMapping("/input")

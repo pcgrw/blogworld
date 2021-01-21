@@ -62,7 +62,7 @@ public class CategoryController {
                            Pageable pageable, Model model) {
         Page<Category> page = categoryService.page(pageable);
         model.addAttribute("page", page);
-        return "/admin/categories";
+        return "admin/categories";
     }
 
     @GetMapping("/{id}/input")
